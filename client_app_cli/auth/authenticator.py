@@ -1,5 +1,7 @@
 import requests
 from client_app_cli.constants import constant
+from client_app_cli.exceptions.exceptions import AuthenticationException
+
 
 class Authenticator:
     """
@@ -14,6 +16,12 @@ class Authenticator:
         """
         self.username = username
         self.password = password
+
+    def __validate(self):
+        if not self.username or not isinstance(self.username, str):
+            raise AuthenticationException('username must be a non-empty string')
+        if not self.password or not isinstance(self.password, str):
+            raise AuthenticationException('password must be a non-empty string')
 
     def authenticate(self) -> str:
         """
