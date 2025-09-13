@@ -24,3 +24,13 @@ def mocked_failure(*args, **kwargs):
         def json(self):
             return self.json_data
     return MockFailure({"error": "invalid token"}, 401)
+
+def mocked_fetch_success(*args, **kwargs):
+    class MockFetchSuccess:
+        def __init__(self, data, status_code):
+            self.data = data
+            self.status_code = status_code
+
+        def json(self):
+            return self.data
+    return MockFetchSuccess(["Title 1", "Title 2"], 200)
