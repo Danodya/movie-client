@@ -16,12 +16,13 @@ class Authenticator:
         """
         self.username = username
         self.password = password
+        self.__validate()
 
     def __validate(self):
         if not self.username or not isinstance(self.username, str):
-            raise AuthenticationException('username must be a non-empty string')
+            raise AuthenticationException("username must be a non-empty string")
         if not self.password or not isinstance(self.password, str):
-            raise AuthenticationException('password must be a non-empty string')
+            raise AuthenticationException("password must be a non-empty string")
 
     def authenticate(self) -> str:
         """
@@ -31,5 +32,9 @@ class Authenticator:
         url = constant.BASE_URL + constant.AUTH_API
         payload = {"username": self.username, "password": self.password}
         response = requests.post(url, json=payload, headers={"Content-Type": "application/json"})
-        bearer_token = response.json()['bearer']
+
+        if response.status_code == 200:
+            bearer_token = response.json()['bearer']
+        else:
+            raise AuthenticationException(response.json()['error'])
         return bearer_token
