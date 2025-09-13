@@ -8,16 +8,14 @@ class MovieFetcher:
     The movie fetcher is responsible for retrieving movie data from the API for the specified years.
     It uses an authenticator to authenticate the user by getting a bearer token and handles pagination for each year
     """
-    def __init__(self, years: List[str], username: str, password: str) -> None:
+    def __init__(self, years: List[str], authenticator: Authenticator) -> None:
         """
         Initialize the movie fetcher with the given username, password, and years
 
         :param years: List of years to fetch movie data for
-        :param username: username to authenticate and obtain a bearer token
-        :param password: password authenticate and obtain a bearer token
+        :param authenticator: Instance to obtain bearer token for API requests
         """
-        self.username = username
-        self.password = password
+        self.authenticator = authenticator
         self.__process_years(years)
 
     def __process_years(self, years: List[str]):
@@ -38,7 +36,7 @@ class MovieFetcher:
             total_movies = 0
             while True:
                 # Authenticate every time for each request
-                auth = Authenticator(self.username, self.password)
+                auth = Authenticator(self.authenticator.username, self.authenticator.password)
                 bearer_token = auth.authenticate()
                 headers = {'Authorization': f'Bearer {bearer_token}'}
 
