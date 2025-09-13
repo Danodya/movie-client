@@ -5,7 +5,7 @@ import pytest
 from client_app_cli.auth.authenticator import Authenticator
 from client_app_cli.exceptions.exceptions import AuthenticationException
 from client_app_cli.fetcher.movie_fetcher import MovieFetcher
-from tests.mocks import mocked_failure, mocked_fetch_success
+from tests.mocks import mocked_failure, mocked_fetch_success, mocked_auth_success
 
 
 @pytest.fixture
@@ -38,8 +38,9 @@ def test_auth_failure(mock_post, fetcher):
     with pytest.raises(AuthenticationException, match=r".*invalid token*"):
         fetcher.fetch_movies()
 
+@mock.patch("requests.post", side_effect=mocked_auth_success)
 @mock.patch("requests.get", side_effect=mocked_fetch_success)
-def test_fetch_success(mock_get, fetcher):
+def test_fetch_success(mock_post, mock_get, fetcher):
     """
     Test that successful fetching returns a dictionary and the correct number of movies for a given year
     :param mock_get:
