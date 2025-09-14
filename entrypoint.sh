@@ -8,6 +8,3 @@ sleep 5
 
 echo "Running movie client..."
 python movie-client/main.py -y "$@"
-
-
-movie-client:1.0.0
