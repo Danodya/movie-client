@@ -1,4 +1,4 @@
-from typing import List, Any, Optional
+from typing import List, Any
 import requests
 from client_app_cli.auth.authenticator import Authenticator
 from client_app_cli.exceptions.exceptions import MovieFetchException
