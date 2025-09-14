@@ -6,7 +6,7 @@ import requests
 from client_app_cli.auth.authenticator import Authenticator
 from client_app_cli.constants.constant import DEFAULT_USERNAME, DEFAULT_PASSWORD, BASE_URL
 from client_app_cli.exceptions.exceptions import AuthenticationException
-from tests.mocks import mocked_auth_success, mocked_failure
+from tests.mocks import mocked_auth_success, mocked_auth_failure
 
 
 def test_validate_success():
@@ -40,7 +40,7 @@ def test_authenticate_success(mock_post):
     assert auth_response == 1234
     mock_post.assert_called_once()
 
-@mock.patch("requests.post", side_effect=mocked_failure)
+@mock.patch("requests.post", side_effect=mocked_auth_failure)
 def test_authenticate_failure(mock_post):
     """
     Test that unsuccessful authentication raises AuthenticationException

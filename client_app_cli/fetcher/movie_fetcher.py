@@ -1,10 +1,9 @@
 from typing import List, Any
 import requests
 from client_app_cli.auth.authenticator import Authenticator
+from client_app_cli.exceptions.exceptions import MovieFetchException
 from client_app_cli.constants import constant
 from tqdm import tqdm
-
-from client_app_cli.exceptions.exceptions import AuthenticationException
 
 
 class MovieFetcher:
@@ -43,11 +42,8 @@ class MovieFetcher:
                     page = 1
                     total_movies = 0
                     while True:
-                        try:
-                            # Authenticate every time for each request
-                            bearer_token = self.authenticator.authenticate()
-                        except AuthenticationException as e:
-                            raise AuthenticationException(e)
+                        # Authenticate every time for each request
+                        bearer_token = self.authenticator.authenticate()
 
                         # Build the request URL
                         url = self.authenticator.base_url + constant.MOVIES_API.format(year=year, page=page)
@@ -64,7 +60,7 @@ class MovieFetcher:
                                 break
                             page += 1
                         else:
-                            raise RuntimeError(response.json()['error'])
+                            raise MovieFetchException(response.json()['error'])
 
                     movies_counts[year] = total_movies
 
