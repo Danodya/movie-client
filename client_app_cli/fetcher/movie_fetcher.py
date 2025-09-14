@@ -4,6 +4,9 @@ from client_app_cli.auth.authenticator import Authenticator
 from client_app_cli.constants import constant
 from tqdm import tqdm
 
+from client_app_cli.exceptions.exceptions import AuthenticationException
+
+
 class MovieFetcher:
     """
     The movie fetcher is responsible for retrieving movie data from the API for the specified years.
@@ -40,8 +43,11 @@ class MovieFetcher:
                     page = 1
                     total_movies = 0
                     while True:
-                        # Authenticate every time for each request
-                        bearer_token = self.authenticator.authenticate()
+                        try:
+                            # Authenticate every time for each request
+                            bearer_token = self.authenticator.authenticate()
+                        except AuthenticationException as e:
+                            raise AuthenticationException(e)
 
                         # Build the request URL
                         url = self.authenticator.base_url + constant.MOVIES_API.format(year=year, page=page)

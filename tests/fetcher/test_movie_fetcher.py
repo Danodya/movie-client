@@ -4,7 +4,6 @@ import pytest
 
 from client_app_cli.auth.authenticator import Authenticator
 from client_app_cli.constants.constant import DEFAULT_USERNAME, DEFAULT_PASSWORD, BASE_URL
-from client_app_cli.exceptions.exceptions import AuthenticationException
 from client_app_cli.fetcher.movie_fetcher import MovieFetcher
 from tests.mocks import mocked_failure, mocked_fetch_success, mocked_auth_success
 
@@ -33,11 +32,10 @@ def fetcher(authenticator, years):
 @mock.patch("requests.post", side_effect=mocked_failure)
 def test_auth_failure(mock_post, fetcher):
     """
-    Test that unsuccessful authentication raises AuthenticationException when movie fetching
+    Test that unsuccessful authentication returns None for the specified year
     :param mock_post: mocks the response of the requests.post
     """
-    with pytest.raises(AuthenticationException, match=r".*invalid token*"):
-        fetcher.fetch_movies()
+    assert fetcher.fetch_movies()["1940"] is None
 
 @mock.patch("requests.post", side_effect=mocked_auth_success)
 @mock.patch("requests.get", side_effect=mocked_fetch_success)

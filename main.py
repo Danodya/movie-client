@@ -26,9 +26,8 @@ if __name__=="__main__":
         for year, count in response.items():
             if count is None:
                 print()
-        pretty_response = "\n".join([f"Year {key} got {response[key]} movies." for key in response])
         pretty_response = "\n".join([f"Failed to fetch movies for year {key}." if response[key] is None
-                                     else f"Year {key} got {response[key]} movies." for key in response])
+                                     else f"Year {key} has {response[key]} movies." for key in response])
         print(pretty_response)
     else:
         print("No response received.")
