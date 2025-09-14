@@ -26,6 +26,9 @@ def mocked_auth_failure(*args, **kwargs):
     return MockFailure({"error": "invalid token"}, 401)
 
 def mocked_fetch_success(*args, **kwargs):
+    """
+    Mocked response for successful fetch
+    """
     class MockFetchSuccess:
         def __init__(self, data, status_code):
             self.data = data
@@ -38,7 +41,7 @@ def mocked_fetch_success(*args, **kwargs):
 def mocked_fetch_failure(*args, **kwargs):
     class MockFetchFailure:
         """
-        Mocked response for failed authentication
+        Mocked response for failed fetch
         """
         def __init__(self, json_data, status_code):
             self.json_data = json_data
