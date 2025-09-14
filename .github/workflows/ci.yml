@@ -35,7 +35,7 @@ jobs:
         run: ruff check .
 
       - name: Black check
-        run: black --check .
+        run: black --check --diff .
 
       - name: MyPy check
         run: mypy .
