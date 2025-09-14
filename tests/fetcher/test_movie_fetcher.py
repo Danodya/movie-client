@@ -3,6 +3,7 @@ from unittest import mock
 import pytest
 
 from client_app_cli.auth.authenticator import Authenticator
+from client_app_cli.constants.constant import DEFAULT_USERNAME, DEFAULT_PASSWORD, BASE_URL
 from client_app_cli.exceptions.exceptions import AuthenticationException
 from client_app_cli.fetcher.movie_fetcher import MovieFetcher
 from tests.mocks import mocked_failure, mocked_fetch_success, mocked_auth_success
@@ -13,7 +14,7 @@ def authenticator():
     """
     returns Authenticator instance to use in movie fetcher
     """
-    return Authenticator("username", "password")
+    return Authenticator(DEFAULT_USERNAME, DEFAULT_PASSWORD, BASE_URL)
 
 @pytest.fixture()
 def years():

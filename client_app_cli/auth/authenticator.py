@@ -7,7 +7,7 @@ class Authenticator:
     """
     Authenticator class that handles authentication
     """
-    def __init__(self, username: str, password: str):
+    def __init__(self, username: str, password: str, base_url: str):
         """
         Initializes the Authenticator with user credentials
 
@@ -16,6 +16,7 @@ class Authenticator:
         """
         self.username = username
         self.password = password
+        self.base_url = base_url
         self.__validate()
 
     def __validate(self):
@@ -29,7 +30,7 @@ class Authenticator:
         Authenticates the user using the username and password provided at instantiation.
         :return: bearer token
         """
-        url = constant.BASE_URL + constant.AUTH_API
+        url = self.base_url + constant.AUTH_API
         payload = {"username": self.username, "password": self.password}
         response = requests.post(url, json=payload, headers={"Content-Type": "application/json"})
 

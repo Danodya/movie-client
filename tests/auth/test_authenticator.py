@@ -4,6 +4,7 @@ import pytest
 import requests
 
 from client_app_cli.auth.authenticator import Authenticator
+from client_app_cli.constants.constant import DEFAULT_USERNAME, DEFAULT_PASSWORD, BASE_URL
 from client_app_cli.exceptions.exceptions import AuthenticationException
 from tests.mocks import mocked_auth_success, mocked_failure
 
@@ -12,21 +13,21 @@ def test_validate_success():
     """
     Test that valid username and password do not raise exceptions
     """
-    Authenticator("username", "password")
+    Authenticator(DEFAULT_USERNAME, DEFAULT_PASSWORD, BASE_URL)
 
 def test_validate_invalid_username():
     """
     Test that invalid username raises AuthenticationException
     """
     with pytest.raises(AuthenticationException, match=r".*username must be a non-empty string.*"):
-        Authenticator("", "password")
+        Authenticator("", DEFAULT_PASSWORD, BASE_URL)
 
 def test_validate_invalid_password():
     """
     Test that invalid password raises AuthenticationException
     """
     with pytest.raises(AuthenticationException, match=r".*password must be a non-empty string.*"):
-        Authenticator("username", "")
+        Authenticator(DEFAULT_USERNAME, "", BASE_URL)
 
 @mock.patch("requests.post", side_effect=mocked_auth_success)
 def test_authenticate_success(mock_post):
@@ -35,7 +36,7 @@ def test_authenticate_success(mock_post):
     :param mock_post: mocks the response of the requests.post
     :return: bearer token
     """
-    auth_response = Authenticator("username", "password").authenticate()
+    auth_response = Authenticator(DEFAULT_USERNAME, DEFAULT_PASSWORD, BASE_URL).authenticate()
     assert auth_response == 1234
     mock_post.assert_called_once()
 
@@ -46,5 +47,5 @@ def test_authenticate_failure(mock_post):
     :param mock_post: mocks the response of the requests.post
     """
     with pytest.raises(AuthenticationException, match=r".*invalid token*"):
-        Authenticator("username", "password").authenticate()
+        Authenticator(DEFAULT_USERNAME, DEFAULT_PASSWORD, BASE_URL).authenticate()
 

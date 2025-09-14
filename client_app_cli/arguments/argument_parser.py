@@ -13,14 +13,16 @@ class ArgumentParser:
         """
         self.parser = argparse.ArgumentParser(
             prog="Movie-Client", description="Movie Client - Fetch movies from the database")
+        self.__add_arguments()
 
-    def add_arguments(self):
+
+    def __add_arguments(self):
         """
         Defines the command-line arguments for the parser.
         Adds 'years' arguments to the parser.
         """
         self.parser.add_argument(
-            "-y", "--year", required=True, nargs="+", type=int,
+            "-y", "--years", required=True, nargs="+", type=int,
             help="The years to fetch movies for (e.g., y 1940 1950)")
 
     def parse(self) -> argparse.Namespace:
