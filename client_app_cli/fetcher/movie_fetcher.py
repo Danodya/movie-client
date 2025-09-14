@@ -1,4 +1,4 @@
-from typing import List, Any
+from typing import List, Any, Optional
 import requests
 from client_app_cli.auth.authenticator import Authenticator
 from client_app_cli.exceptions.exceptions import MovieFetchException
@@ -11,6 +11,7 @@ class MovieFetcher:
     The movie fetcher is responsible for retrieving movie data from the API for the specified years.
     It uses an authenticator to authenticate the user by getting a bearer token and handles pagination for each year
     """
+
     def __init__(self, years: List[str], authenticator: Authenticator) -> None:
         """
         Initialize the movie fetcher with the given username, password, and years
@@ -32,10 +33,12 @@ class MovieFetcher:
         Fetch movie data from the API for the specified years, handling authentication and pagination
         :return: A dictionary mapping each year to the count of movies fetched.
         """
-        movies_counts = {}
+        movies_counts: dict[Any, Any] = {}
 
         # Initialize the progress bar
-        with tqdm(total=len(self.years), desc="Fetching Movies by Year", unit="year") as pbar:
+        with tqdm(
+            total=len(self.years), desc="Fetching Movies by Year", unit="year"
+        ) as pbar:
             for year in self.years:
                 try:
                     pbar.set_postfix({"year": year})
@@ -46,8 +49,10 @@ class MovieFetcher:
                         bearer_token = self.authenticator.authenticate()
 
                         # Build the request URL
-                        url = self.authenticator.base_url + constant.MOVIES_API.format(year=year, page=page)
-                        headers = {'Authorization': f'Bearer {bearer_token}'}
+                        url = self.authenticator.base_url + constant.MOVIES_API.format(
+                            year=year, page=page
+                        )
+                        headers = {"Authorization": f"Bearer {bearer_token}"}
                         response = requests.get(url, headers=headers)
 
                         # Check for HTTP error
@@ -60,7 +65,7 @@ class MovieFetcher:
                                 break
                             page += 1
                         else:
-                            raise MovieFetchException(response.json()['error'])
+                            raise MovieFetchException(response.json()["error"])
 
                     movies_counts[year] = total_movies
 
@@ -74,6 +79,3 @@ class MovieFetcher:
                     pbar.update(1)
 
         return movies_counts
-
-
-
