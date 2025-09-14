@@ -39,7 +39,7 @@ class MovieFetcher:
         with tqdm(
             total=len(self.years), desc="Fetching Movies by Year", unit="year"
         ) as pbar:
-            for year in self.years:
+            for year in sorted(self.years):
                 try:
                     pbar.set_postfix({"year": year})
                     page = 1
