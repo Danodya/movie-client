@@ -31,7 +31,7 @@ COPY --from=builder /app/movie-server/movie-server ./movie-server/
 # Copy the Python client code
 COPY ./client_app_cli ./movie-client/client_app_cli
 
-# Install python dependencies
+# Install Python dependencies
 COPY ./requirements.txt ./movie-client
 COPY ./main.py ./movie-client
 RUN pip install --no-cache-dir --upgrade pip \
