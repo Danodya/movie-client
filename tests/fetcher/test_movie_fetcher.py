@@ -16,7 +16,7 @@ from tests.mocks import (
     mocked_fetch_auth_failure,
     mocked_fetch_failure,
     mocked_fetch_with_more_than_10_movies,
-    mocked_fetch_exception_failure
+    mocked_fetch_exception_failure,
 )
 
 
@@ -84,6 +84,7 @@ def test_process_years(mock_post, mock_get, fetcher):
     assert type(fetch_response) is dict
     assert len(fetch_response) == 1
 
+
 @mock.patch("requests.post", side_effect=mocked_auth_success)
 @mock.patch("requests.get", side_effect=mocked_fetch_failure)
 def test_fetch_failure(mock_post, mock_get, fetcher, years):
@@ -101,6 +102,7 @@ def test_fetch_auth_failure(mock_post, mock_get, fetcher, years):
     Test that unsuccessful fetching returns a dictionary with None for the specified year when authentication fails
     """
     assert fetcher.fetch_movies(years)[1940] is None
+
 
 @mock.patch("requests.post", side_effect=mocked_auth_success)
 @mock.patch("requests.get", side_effect=mocked_fetch_exception_failure)

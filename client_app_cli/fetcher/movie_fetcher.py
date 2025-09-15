@@ -51,8 +51,6 @@ class MovieFetcher:
                         )
                         headers = {"Authorization": f"Bearer {bearer_token}"}
                         response = requests.get(url, headers=headers)
-                        # print(page)
-                        # print(response)
 
                         # Check for HTTP error
                         if response.status_code == 200:

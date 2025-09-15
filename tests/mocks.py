@@ -64,6 +64,7 @@ def mocked_fetch_with_more_than_10_movies(*args, **kwargs):
         200,
     )
 
+
 def mocked_fetch_failure(*args, **kwargs):
     """
     Mocked response for failed fetch for authentication failure
@@ -78,6 +79,7 @@ def mocked_fetch_auth_failure(*args, **kwargs):
     """
 
     return MockFailure({"error": r"*.invalid.*"}, 401)
+
 
 def mocked_fetch_exception_failure(*args, **kwargs):
     """
