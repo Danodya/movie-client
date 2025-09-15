@@ -6,5 +6,4 @@ echo "Starting movie server..."
 
 sleep 5
 
-echo "Running movie client..."
 python movie-client/main.py -y "$@"

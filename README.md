@@ -47,6 +47,19 @@ movie-client/
 ## **Running**
 With the CI pipeline, the Docker image is built and pushed to GitHub Container Registry.
 
+Both the `movie-server` and the `movie-client` are packaged inside the same Docker image, 
+and both will start automatically when the container runs with the entrypoint script with the provided arguments.
+
+>[!NOTE]
+> If the `movie-client` needs to run by logging into the container, change the `entrypoint.sh` by replacing the last line with:
+> `bash`
+> 
+> For example:
+> ```bash
+> docker run --it ghcr.io/danodya/jr103155:1.0.0
+> python movie-client/main.py -y 1940 1950
+> ```
+
 To run the application using Docker, use the following command:
 Provide only the year or years separated by spaces as arguments (e.g., 1940 1950):
 ```bash
@@ -99,6 +112,8 @@ pytest -vx
 ## **CI**
 The project uses GitHub Actions for continuous integration. The CI pipeline is defined in `.github/workflows/ci.yml`
 and includes steps for linting, formatting, type checking, running tests, building the Docker image, and pushing it to GitHub Container Registry.
+
+All the linting and tests are triggered on push to `main` and must pass before the Docker image is built and pushed.
 
 Example commands used in the CI:
 * Linting: `ruff check .`
