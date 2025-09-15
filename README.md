@@ -67,7 +67,7 @@ docker run --it ghcr.io/danodya/jr103155:1.0.0 1940 1950
 ```
 If you want to provide environment variables for the API URL, username, and password, you can do so using the `-e` flag:
 ```bash
-docker run --it -e MOVIE_API_URL="http://localhost:8000" -e MOVIE_API_USER="username" -e MOVIE_API_PASSWORD="password" ghcr.io/danodya/jr103155:1.0.0 1940 1950
+docker run --it -e BASE_URL="http://localhost:8000" -e USERNAME="username" -e PASSWORD="password" ghcr.io/danodya/jr103155:1.0.0 1940 1950
 ```
 
 ## **Build from source**
@@ -92,7 +92,7 @@ export MOVIE_API_PASSWORD="password"          # Password for API authentication
 ```
 or provide them in the command line:
 ```bash
-MOVIE_API_URL="http://localhost:8000" MOVIE_API_USER="username" MOVIE_API_PASSWORD="password" python main.py -y 1940 1950
+BASE_URL="http://localhost:8000" USERNAME="username" PASSWORD="password" python main.py -y 1940 1950
 ```
 5. Run the application:
 
