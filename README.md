@@ -131,8 +131,8 @@ Fetching movies by year:
 
 Results for fetched movies:
 
-Year 2020 has 15 movies.
-Year 2021 has 23 movies.
+Year 1940 has 1686 movies.
+Year 1950 has 1913 movies.
 ```
 
 ## **Testing**
