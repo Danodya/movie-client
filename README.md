@@ -150,7 +150,7 @@ TOTAL                                            80      9    89%
 The project uses GitHub Actions for continuous integration. The CI pipeline is defined in `.github/workflows/ci.yml`
 and includes steps for linting, formatting, type checking, running tests, building the Docker image, and pushing it to GitHub Container Registry.
 
-All the linting and tests are triggered on push to `main` and must pass before the Docker image is built and pushed.
+All the linting and tests are triggered on push to any branch. Docker build and push to container registry occur only upon pushes to `main` after successful linting and testing stages.
 
 Example commands used in the CI:
 * Linting: `ruff check .`
