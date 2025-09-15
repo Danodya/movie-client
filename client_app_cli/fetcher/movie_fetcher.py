@@ -12,34 +12,32 @@ class MovieFetcher:
     It uses an authenticator to authenticate the user by getting a bearer token and handles pagination for each year
     """
 
-    def __init__(self, years: List[str], authenticator: Authenticator) -> None:
+    def __init__(self, authenticator: Authenticator) -> None:
         """
-        Initialize the movie fetcher with the given username, password, and years
-
-        :param years: List of years to fetch movie data for
+        Initialize the movie fetcher with Authenticator object.
         :param authenticator: Instance to obtain bearer token for API requests
         """
         self.authenticator = authenticator
-        self.__process_years(years)
 
     def __process_years(self, years: List[str]):
         """
         convert the list of years into a set to get unique years
         """
-        self.years = set(years)
+        return set(years)
 
-    def fetch_movies(self) -> dict[Any, Any]:
+    def fetch_movies(self, years: List[str]) -> dict[Any, Any]:
         """
         Fetch movie data from the API for the specified years, handling authentication and pagination
         :return: A dictionary mapping each year to the count of movies fetched.
         """
         movies_counts: dict[Any, Any] = {}
+        years = self.__process_years(years)
 
         # Initialize the progress bar
         with tqdm(
-            total=len(self.years), desc="Fetching Movies by Year", unit="year"
+            total=len(years), desc="Fetching Movies by Year", unit="year"
         ) as pbar:
-            for year in sorted(self.years):
+            for year in sorted(years):
                 try:
                     pbar.set_postfix({"year": year})
                     page = 1
