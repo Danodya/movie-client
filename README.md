@@ -46,7 +46,7 @@ movie-client/
 - **Docker**
 
 ## **Running**
->[!NOTE]
+>[!IMPORTANT]
 > This is the recommended way to run the application.
 > If you want to run the application from source, see the [Build from source](#build-from-source) section below.
 
