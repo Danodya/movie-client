@@ -46,6 +46,10 @@ movie-client/
 - **Docker**
 
 ## **Running**
+>[!NOTE]
+> This is the recommended way to run the application.
+> If you want to run the application from source, see the [Build from source](#build-from-source) section below.
+
 With the CI pipeline, the Docker image is built and pushed to GitHub Container Registry.
 
 Both the `movie-server` and the `movie-client` are packaged inside the same Docker image, 
