@@ -65,6 +65,11 @@ Provide only the year or years separated by spaces as arguments (e.g., 1940 1950
 ```bash
 docker run --it ghcr.io/danodya/jr103155:1.0.0 1940 1950
 ```
+If you want to provide environment variables for the API URL, username, and password, you can do so using the `-e` flag:
+```bash
+docker run --it -e MOVIE_API_URL="http://localhost:8000" -e MOVIE_API_USER="username" -e MOVIE_API_PASSWORD="password" ghcr.io/danodya/jr103155:1.0.0 1940 1950
+```
+
 ## **Build from source**
 1. Clone the repository:
 ```bash
