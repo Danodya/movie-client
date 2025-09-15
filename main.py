@@ -25,7 +25,8 @@ if __name__ == "__main__":
     response = fetcher.fetch_movies(years)
 
     if response:
-        print("\nResult for fetched movies:\n")
+        print("\n========================================\n")
+        print("Results for fetched movies:\n")
         pretty_response = "\n".join(
             [
                 (

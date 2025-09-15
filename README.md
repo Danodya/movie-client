@@ -109,6 +109,10 @@ python main.py -y 1940 1950
 ```
 Starting movie-client...
 Fetching movies by year:
+============================
+
+Results for fetched movies:
+
 Year 2020 has 15 movies.
 Year 2021 has 23 movies.
 ```
