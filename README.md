@@ -98,6 +98,10 @@ or provide them in the command line:
 ```bash
 MOVIE_API_BASE_URL="http://localhost:8080/" MOVIE_API_USERNAME="username" MOVIE_API_PASSWORD="password" python main.py -y 1940 1950
 ```
+
+>[!NOTE]
+> The command above overrides the environment variables exported above in step 4.
+
 5. Run the application:
 
 To fetch movies for specific years, we need the movie server running and accessible. Run movie-server first, then execute:

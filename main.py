@@ -15,9 +15,9 @@ if __name__ == "__main__":
     argument_parser = ArgumentParser()
     years = argument_parser.parse().years
 
-    username = os.environ.get("USERNAME", DEFAULT_USERNAME)
-    password = os.environ.get("PASSWORD", DEFAULT_PASSWORD)
-    base_url = os.environ.get("BASE_URL", BASE_URL)
+    username = os.environ.get("MOVIE_API_USERNAME", DEFAULT_USERNAME)
+    password = os.environ.get("MOVIE_API_PASSWORD", DEFAULT_PASSWORD)
+    base_url = os.environ.get("MOVIE_API_BASE_URL", BASE_URL)
 
     auth = Authenticator(username, password, base_url)
     fetcher = MovieFetcher(auth)
