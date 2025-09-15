@@ -55,15 +55,6 @@ With the CI pipeline, the Docker image is built and pushed to GitHub Container R
 Both the `movie-server` and the `movie-client` are packaged inside the same Docker image, 
 and both will start automatically when the container runs with the entrypoint script with the provided arguments.
 
->[!NOTE]
-> If the `movie-client` needs to run by logging into the container, change the `entrypoint.sh` by replacing the last line with `bash`.
-> 
-> For example, to run the client application for the years 1940 and 1950 by logging into the container:
-> ```bash
-> docker run -it ghcr.io/danodya/jr103155:1.0.0     # Logs into the container because the entrypoint script ends with bash
-> python movie-client/main.py -y 1940 1950          # Runs the client application for 1940 and 1950
-> ```
-
 To run the application using Docker, use the following command:
 Provide only the year or years separated by spaces as arguments (e.g., 1940 1950):
 ```bash
@@ -73,6 +64,15 @@ If you want to provide environment variables for the API URL, username, and pass
 ```bash
 docker run -it -e MOVIE_API_BASE_URL="http://localhost:8080/" -e MOVIE_API_USERNAME="username" -e MOVIE_API_PASSWORD="password" ghcr.io/danodya/jr103155:1.0.0 1940 1950
 ```
+
+>[!NOTE]
+> If the `movie-client` needs to run by logging into the container, change the `entrypoint.sh` by replacing the last line with `bash`.
+> 
+> For example, to run the client application for the years 1940 and 1950 by logging into the container:
+> ```bash
+> docker run -it ghcr.io/danodya/jr103155:1.0.0     # Logs into the container because the entrypoint script ends with bash
+> python movie-client/main.py -y 1940 1950          # Runs the client application for 1940 and 1950
+> ```
 
 ## **Build from source**
 ### Using Docker ###
