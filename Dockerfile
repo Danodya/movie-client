@@ -1,25 +1,16 @@
-# 1. Build the Go movie-server
+# This is a multi-stage Dockerfile that builds a Go movie-server and sets up a Python client environment.
+# Stage 1: Build the Go movie-server
 FROM golang:1.25.1-alpine AS builder
 
-# Install git
-RUN apk add --no-cache git bash make
+# Install git and make, clone the repo, build the server
+RUN apk add --no-cache git make \
+ && git clone https://github.com/Danodya/movie-server.git /app/movie-server \
+ && cd /app/movie-server \
+ && make \
+ && go build -o /app/movie-server/movie-server
 
 
-# Set workdir
-WORKDIR /app
-
-# Clone movie-server repo
-RUN git clone https://github.com/Danodya/movie-server.git /app/movie-server
-
-# Set workdir
-WORKDIR /app/movie-server
-
-# Build go movie-server
-RUN make
-RUN go build -o /app/movie-server/movie-server
-
-
-# 2. Setup python environment
+# Stage 2: Setup python environment
 FROM python:3.13-slim
 
 # Set workdir
@@ -39,13 +30,12 @@ RUN pip install --no-cache-dir --upgrade pip \
 
 RUN chmod +x ./movie-server/movie-server
 
-# Expose server port
-EXPOSE 8080
-
 # Add entrypoint script
 COPY entrypoint.sh ./entrypoint.sh
 RUN chmod +x ./entrypoint.sh
 
+# Expose server port
+EXPOSE 8080
 ENTRYPOINT ["./entrypoint.sh"]
 
 

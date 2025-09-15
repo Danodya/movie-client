@@ -75,6 +75,21 @@ docker run -it -e MOVIE_API_BASE_URL="http://localhost:8080/" -e MOVIE_API_USERN
 ```
 
 ## **Build from source**
+### Using Docker ###
+1. Clone the repository:
+```bash
+git clone https://github.com/Danodya/movie-client.git && cd movie-client
+```
+2. Docker build:
+```bash
+docker build -t movie-client .
+```
+3. Run the container with the required environment variables(if needed) and years as arguments:
+```bash
+docker run -it movie-client 1940 1950
+```
+
+### Using Python virtual environment ###
 1. Clone the repository:
 ```bash
 git clone https://github.com/Danodya/movie-client.git && cd movie-client
