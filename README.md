@@ -118,6 +118,26 @@ Run the tests using `pytest`:
 ```bash
 pytest -vx
 ``` 
+Test coverage for the overall project is approximately 89%. Coverage report is as follows:
+```
+
+Name                                          Stmts   Miss  Cover
+-----------------------------------------------------------------
+client_app_cli/__init__.py                        0      0   100%
+client_app_cli/arguments/__init__.py              0      0   100%
+client_app_cli/arguments/argument_parser.py       9      9     0%
+client_app_cli/auth/__init__.py                   0      0   100%
+client_app_cli/auth/authenticator.py             22      0   100%
+client_app_cli/constants/__init__.py              0      0   100%
+client_app_cli/constants/constant.py              5      0   100%
+client_app_cli/exceptions/__init__.py             0      0   100%
+client_app_cli/exceptions/exceptions.py           2      0   100%
+client_app_cli/fetcher/__init__.py                0      0   100%
+client_app_cli/fetcher/movie_fetcher.py          42      0   100%
+-----------------------------------------------------------------
+TOTAL                                            80      9    89%
+
+```
 
 ## **Continuous Integration**
 The project uses GitHub Actions for continuous integration. The CI pipeline is defined in `.github/workflows/ci.yml`

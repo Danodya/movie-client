@@ -13,7 +13,10 @@ from tests.mocks import (
     mocked_auth_failure,
     mocked_fetch_success,
     mocked_auth_success,
+    mocked_fetch_auth_failure,
     mocked_fetch_failure,
+    mocked_fetch_with_more_than_10_movies,
+    mocked_fetch_exception_failure
 )
 
 
@@ -50,7 +53,10 @@ def test_auth_failure(mock_post, fetcher, years):
 
 
 @mock.patch("requests.post", side_effect=mocked_auth_success)
-@mock.patch("requests.get", side_effect=mocked_fetch_success)
+@mock.patch(
+    "requests.get",
+    side_effect=[mocked_fetch_with_more_than_10_movies(), mocked_fetch_success()],
+)
 def test_fetch_success(mock_post, mock_get, fetcher, years):
     """
     Test that successful fetching returns a dictionary and the correct number of movies for a given year
@@ -59,10 +65,9 @@ def test_fetch_success(mock_post, mock_get, fetcher, years):
     :param fetcher: fetcher instance
     :param years: years instance
     """
-    fetch_response = fetcher.fetch_movies(years)
-    assert type(fetch_response) is dict
-    assert fetch_response[1940] == 2
-    assert fetch_response[1950] == 2
+    fetch_response = fetcher.fetch_movies([1940])
+    assert isinstance(fetch_response, dict)
+    assert fetch_response[1940] == 14
 
 
 @mock.patch("requests.post", side_effect=mocked_auth_success)
@@ -79,11 +84,28 @@ def test_process_years(mock_post, mock_get, fetcher):
     assert type(fetch_response) is dict
     assert len(fetch_response) == 1
 
-
 @mock.patch("requests.post", side_effect=mocked_auth_success)
 @mock.patch("requests.get", side_effect=mocked_fetch_failure)
 def test_fetch_failure(mock_post, mock_get, fetcher, years):
     """
-    Test that unsuccessful fetching returns a dictionary with None for the specified year
+    Test that unsuccessful fetching returns a dictionary with None for the specified year when year not found
+    """
+    assert fetcher.fetch_movies(years)[1940] is None
+    assert fetcher.fetch_movies(years)[1950] is None
+
+
+@mock.patch("requests.post", side_effect=mocked_auth_success)
+@mock.patch("requests.get", side_effect=mocked_fetch_auth_failure)
+def test_fetch_auth_failure(mock_post, mock_get, fetcher, years):
+    """
+    Test that unsuccessful fetching returns a dictionary with None for the specified year when authentication fails
+    """
+    assert fetcher.fetch_movies(years)[1940] is None
+
+@mock.patch("requests.post", side_effect=mocked_auth_success)
+@mock.patch("requests.get", side_effect=mocked_fetch_exception_failure)
+def test_fetch_exception_failure(mock_post, mock_get, fetcher, years):
+    """
+    Test that unsuccessful fetching returns a dictionary with None for the specified year when unexpected error occurs
     """
     assert fetcher.fetch_movies(years)[1940] is None
