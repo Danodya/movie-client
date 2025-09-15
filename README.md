@@ -16,7 +16,7 @@ and a `main.py` file as the main executable entry point for the CLI.
 
 All dependencies are listed in the `requirements.txt` file, and the current version of the app is stored in the `.version` file.
 
-`Ruff`, `Black`, and `MyPy` are used for linting, formatting, and type checking, respectively, to maintain code quality.
+[`ruff`](https://docs.astral.sh/ruff/), [`black`](https://github.com/psf/black), and [`mypy`](https://github.com/python/mypy) are used for linting, formatting, and type checking, respectively, to maintain code quality.
 
 ```
 
