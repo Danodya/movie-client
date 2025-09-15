@@ -10,25 +10,23 @@ from client_app_cli.constants.constant import (
 from client_app_cli.fetcher.movie_fetcher import MovieFetcher
 
 if __name__ == "__main__":
-    print("Starting the application...")
+    print("Starting movie-client...")
 
     argument_parser = ArgumentParser()
     years = argument_parser.parse().years
 
-    username = os.environ.get("USERNAME", DEFAULT_USERNAME)
-    password = os.environ.get("PASSWORD", DEFAULT_PASSWORD)
-    base_url = os.environ.get("BASE_URL", BASE_URL)
+    username = os.environ.get("MOVIE_API_USERNAME", DEFAULT_USERNAME)
+    password = os.environ.get("MOVIE_API_PASSWORD", DEFAULT_PASSWORD)
+    base_url = os.environ.get("MOVIE_API_BASE_URL", BASE_URL)
 
     auth = Authenticator(username, password, base_url)
-    fetcher = MovieFetcher(years, auth)
+    fetcher = MovieFetcher(auth)
 
-    response = fetcher.fetch_movies()
+    response = fetcher.fetch_movies(years)
 
     if response:
-        for year, count in response.items():
-            if count is None:
-                print()
-
+        print("\n========================================\n")
+        print("Results for fetched movies:\n")
         pretty_response = "\n".join(
             [
                 (
