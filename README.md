@@ -2,7 +2,7 @@
 
 # Movie Client CLI
 A command-line interface (CLI) application for managing and interacting with a movie database. 
-This application communicates with the movie-server using an API endpoint to authenticate and fetch movie data.
+This application communicates with the `movie-server` using an API endpoint to authenticate and fetch movie data.
 
 ## **Project Structure**
 Main source code for the client app is located in the `client_app_cli` directory, with separate directories for 
