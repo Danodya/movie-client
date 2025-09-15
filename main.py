@@ -25,10 +25,7 @@ if __name__ == "__main__":
     response = fetcher.fetch_movies(years)
 
     if response:
-        for year, count in response.items():
-            if count is None:
-                print()
-
+        print("\nResult for fetched movies:\n")
         pretty_response = "\n".join(
             [
                 (

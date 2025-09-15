@@ -30,7 +30,7 @@ def years():
     """
     returns a list of years
     """
-    return ["1940", "1950"]
+    return [1940, 1950]
 
 
 @pytest.fixture()
@@ -46,7 +46,7 @@ def test_auth_failure(mock_post, fetcher, years):
     """
     Test that unsuccessful authentication returns None for the specified year
     """
-    assert fetcher.fetch_movies(years)["1940"] is None
+    assert fetcher.fetch_movies(years)[1940] is None
 
 
 @mock.patch("requests.post", side_effect=mocked_auth_success)
@@ -61,8 +61,8 @@ def test_fetch_success(mock_post, mock_get, fetcher, years):
     """
     fetch_response = fetcher.fetch_movies(years)
     assert type(fetch_response) is dict
-    assert fetch_response["1940"] == 2
-    assert fetch_response["1950"] == 2
+    assert fetch_response[1940] == 2
+    assert fetch_response[1950] == 2
 
 
 @mock.patch("requests.post", side_effect=mocked_auth_success)
@@ -75,7 +75,7 @@ def test_process_years(mock_post, mock_get, fetcher):
     :param mock_get: mocks the response of the requests.get
     :param fetcher: fetcher instance
     """
-    fetch_response = fetcher.fetch_movies(["1940", "1940"])
+    fetch_response = fetcher.fetch_movies([1940, 1940])
     assert type(fetch_response) is dict
     assert len(fetch_response) == 1
 
@@ -86,4 +86,4 @@ def test_fetch_failure(mock_post, mock_get, fetcher, years):
     """
     Test that unsuccessful fetching returns a dictionary with None for the specified year
     """
-    assert fetcher.fetch_movies(years)["1940"] is None
+    assert fetcher.fetch_movies(years)[1940] is None

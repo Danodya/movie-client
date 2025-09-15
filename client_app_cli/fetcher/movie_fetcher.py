@@ -1,7 +1,7 @@
 from typing import List, Any
 import requests
 from client_app_cli.auth.authenticator import Authenticator
-from client_app_cli.exceptions.exceptions import MovieFetchException
+from client_app_cli.exceptions.exceptions import AuthenticationException
 from client_app_cli.constants import constant
 from tqdm import tqdm
 
@@ -19,13 +19,13 @@ class MovieFetcher:
         """
         self.authenticator = authenticator
 
-    def __process_years(self, years: List[str]):
+    def __process_years(self, years: List[int]):
         """
         convert the list of years into a set to get unique years
         """
         return set(years)
 
-    def fetch_movies(self, years: List[str]) -> dict[Any, Any]:
+    def fetch_movies(self, years: List[int]) -> dict[Any, Any]:
         """
         Fetch movie data from the API for the specified years, handling authentication and pagination
         :return: A dictionary mapping each year to the count of movies fetched.
@@ -39,9 +39,8 @@ class MovieFetcher:
         ) as pbar:
             for year in sorted(years):
                 try:
-                    pbar.set_postfix({"year": year})
+                    pbar.set_postfix_str(f"Processing year={year}")
                     page = 1
-                    total_movies = 0
                     while True:
                         # Authenticate every time for each request
                         bearer_token = self.authenticator.authenticate()
@@ -52,24 +51,32 @@ class MovieFetcher:
                         )
                         headers = {"Authorization": f"Bearer {bearer_token}"}
                         response = requests.get(url, headers=headers)
+                        # print(page)
+                        # print(response)
 
                         # Check for HTTP error
                         if response.status_code == 200:
                             movies = response.json()
-                            total_movies += len(movies)
+                            movies_counts[year] = movies_counts.get(year, 0) + len(
+                                movies
+                            )
 
                             # stop when the last page is reached
                             if len(movies) < 10:
                                 break
                             page += 1
                         else:
-                            raise MovieFetchException(response.json()["error"])
+                            error_msg = response.json()["error"]
+                            tqdm.write(f"{error_msg} for year {year}, page {page}")
+                            movies_counts[year] = movies_counts.get(year, None)
+                            break
 
-                    movies_counts[year] = total_movies
+                except AuthenticationException as e:
+                    tqdm.write(f"{e} for year {year}")
+                    movies_counts[year] = None
 
                 except Exception as e:
-                    error_msg = f"Error fetching {year}: {e}"
-                    print(f"{error_msg}")
+                    tqdm.write(f"Unexpected error while fetching year {year}: {e}")
                     movies_counts[year] = None
 
                 finally:

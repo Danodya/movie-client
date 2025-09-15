@@ -16,8 +16,9 @@ and a `main.py` file as the main executable entry point for the CLI.
 
 All dependencies are listed in the `requirements.txt` file, and the current version of the app is stored in the `.version` file.
 
-```
+`Ruff`, `Black`, and `MyPy` are used for linting, formatting, and type checking, respectively, to maintain code quality.
 
+```
 
 movie-client/
 ├── .github/workflows/          # GitHub Actions workflows for CI/CD
@@ -114,7 +115,7 @@ Run the tests using `pytest`:
 pytest -vx
 ``` 
 
-## **CI**
+## **Continuous Integration**
 The project uses GitHub Actions for continuous integration. The CI pipeline is defined in `.github/workflows/ci.yml`
 and includes steps for linting, formatting, type checking, running tests, building the Docker image, and pushing it to GitHub Container Registry.
 
