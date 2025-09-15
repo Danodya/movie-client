@@ -136,6 +136,9 @@ Year 1950 has 1913 movies.
 ```
 
 ## **Testing**
+Docker image only contains the necessary files to run the `movie-server` and `movie-client` applications.<br>
+To run tests, you need to set up a Python virtual environment as described in the "Build from source" section above.
+
 Run the tests using `pytest`:
 ```bash
 pytest -vx
