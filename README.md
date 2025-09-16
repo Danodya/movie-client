@@ -125,6 +125,8 @@ python main.py -y 1940 1950
 ```
 ## **Example Output**
 ```
+A progress bar will be displayed while fetching movies for each year.
+
 Starting movie-client...
 Fetching movies by year:
 ============================
