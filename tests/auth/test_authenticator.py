@@ -39,6 +39,16 @@ def test_validate_invalid_password():
         Authenticator(DEFAULT_USERNAME, "", BASE_URL)
 
 
+def test_validate_invalid_url():
+    """
+    Test that an invalid url raises AuthenticationException
+    """
+    with pytest.raises(
+        AuthenticationException, match=r".*URL must be valid and non-empty string.*"
+    ):
+        Authenticator(DEFAULT_USERNAME, DEFAULT_PASSWORD, "#invalid-url")
+
+
 @mock.patch("requests.post", side_effect=mocked_auth_success)
 def test_authenticate_success(mock_post):
     """
