@@ -2,6 +2,8 @@
 # Stage 1: Build the Go movie-server
 FROM golang:1.25.1-alpine AS builder
 
+ENV GOPATH=/app/movie-server/
+
 # Install git and make, clone the repo, build the server
 RUN apk add --no-cache git make \
  && git clone https://github.com/Danodya/movie-server.git /app/movie-server \
@@ -16,7 +18,7 @@ FROM python:3.13-slim
 WORKDIR /app
 
 # Copy built Go binary
-COPY --from=builder /app/movie-server/movie-server ./movie-server/
+COPY --from=builder /app/movie-server/bin/movie-server ./movie-server/
 
 # Copy the Python client codeK
 COPY ./client_app_cli ./movie-client/client_app_cli
