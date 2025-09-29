@@ -44,6 +44,7 @@ class MovieFetcher:
 
             try:
                 while True:
+                    # do the exponential growth to get the failing page
                     response = self.fetch(page, year)
                     if response.status_code == 200:
                         lower = page + 1
@@ -52,6 +53,7 @@ class MovieFetcher:
                     else:
                         break
 
+                # Do binary search to find the lowest failing page
                 while lower <= upper:
                     mid = lower + (upper - lower) // 2
                     page = mid
@@ -79,6 +81,12 @@ class MovieFetcher:
         return movies_counts
 
     def fetch(self, page, year) -> Response:
+        """
+        Fetch movies for given year and page
+        :param page: page number to fetch
+        :param year: year to fetch movies
+        :return: Response object for the fetched movies
+        """
         # Authenticate every time for each request
         bearer_token = self.authenticator.authenticate()
 
