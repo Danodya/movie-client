@@ -52,7 +52,7 @@ class MovieFetcher:
                     else:
                         break
 
-                while lower < upper:
+                while lower <= upper:
                     mid = lower + (upper - lower) // 2
                     page = mid
                     response = self.fetch(page, year)
@@ -65,9 +65,9 @@ class MovieFetcher:
                 if page == 1 and lower == 1:
                     raise MovieFetcherException(response.json()["error"])
 
-                response = self.fetch(page, year)
+                response = self.fetch(page - 1, year)
                 movies = response.json()
-                movies_counts[year] = 10 * (page - 1) + len(movies)
+                movies_counts[year] = 10 * (page - 2) + len(movies)
 
             except (AuthenticationException, MovieFetcherException) as e:
                 print(f"{e} for year {year}")

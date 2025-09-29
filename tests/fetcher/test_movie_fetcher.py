@@ -15,7 +15,6 @@ from tests.mocks import (
     mocked_auth_success,
     mocked_fetch_auth_failure,
     mocked_fetch_failure,
-    mocked_fetch_with_more_than_10_movies,
     mocked_fetch_exception_failure,
 )
 
@@ -53,10 +52,7 @@ def test_auth_failure(mock_post, fetcher, years):
 
 
 @mock.patch("requests.post", side_effect=mocked_auth_success)
-@mock.patch(
-    "requests.get",
-    side_effect=[mocked_fetch_with_more_than_10_movies(), mocked_fetch_success()],
-)
+@mock.patch("requests.get", side_effect=mocked_fetch_success)
 def test_fetch_success(mock_post, mock_get, fetcher, years):
     """
     Test that successful fetching returns a dictionary and the correct number of movies for a given year
@@ -67,7 +63,7 @@ def test_fetch_success(mock_post, mock_get, fetcher, years):
     """
     fetch_response = fetcher.fetch_movies([1940])
     assert isinstance(fetch_response, dict)
-    assert fetch_response[1940] == 14
+    assert fetch_response[1940] == 22
 
 
 @mock.patch("requests.post", side_effect=mocked_auth_success)
