@@ -46,7 +46,7 @@ class Authenticator:
         parsed = urlparse(url)
         return all([parsed.scheme, parsed.netloc])
 
-    def authenticate(self) -> str:
+    def authenticate(self) -> str | None:
         """
         Authenticates the user using the username and password provided at instantiation.
         :return: bearer token
@@ -63,7 +63,9 @@ class Authenticator:
 
         if response.status_code == 200:
             self.token = response.json()["bearer"]
-            self.token_expiry = datetime.now() + timedelta(seconds=response.json()["timeout"])
+            self.token_expiry = datetime.now() + timedelta(
+                seconds=response.json()["timeout"]
+            )
         else:
             raise AuthenticationException(response.json()["error"])
         return self.token
