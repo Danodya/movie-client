@@ -1,8 +1,14 @@
 from typing import List, Any
 import requests
+from requests import Response
+
 from client_app_cli.auth.authenticator import Authenticator
-from client_app_cli.exceptions.exceptions import AuthenticationException
+from client_app_cli.exceptions.exceptions import (
+    AuthenticationException,
+    MovieFetcherException,
+)
 from client_app_cli.constants import constant
+
 
 class MovieFetcher:
     """
@@ -32,43 +38,54 @@ class MovieFetcher:
         years = self.__process_years(years)
 
         for year in sorted(years):
+            lower = 1
+            upper = 100
+            page = upper
+
             try:
-                page = 1
                 while True:
-                    # Authenticate every time for each request
-                    bearer_token = self.authenticator.authenticate()
-
-                    # Build the request URL
-                    url = self.authenticator.base_url + constant.MOVIES_API.format(
-                        year=year, page=page
-                    )
-                    headers = {"Authorization": f"Bearer {bearer_token}"}
-                    response = requests.get(url, headers=headers)
-
-                    # Check for HTTP error
+                    response = self.fetch(page, year)
                     if response.status_code == 200:
-                        movies = response.json()
-                        movies_counts[year] = movies_counts.get(year, 0) + len(
-                            movies
-                        )
-
-                        # stop when the last page is reached
-                        if len(movies) < 10:
-                            break
-                        page += 1
+                        lower = page + 1
+                        upper = 2 * page
+                        page = upper
                     else:
-                        error_msg = response.json()["error"]
-                        print(f"{error_msg} for year {year}, page {page}")
-                        movies_counts[year] = movies_counts.get(year, None)
                         break
 
-            except AuthenticationException as e:
+                while lower < upper:
+                    mid = lower + (upper - lower) // 2
+                    page = mid
+                    response = self.fetch(page, year)
+                    # Check for HTTP error
+                    if response.status_code == 200:
+                        lower = page + 1
+                    else:
+                        upper = page - 1
+
+                if page == 1 and lower == 1:
+                    raise MovieFetcherException(response.json()["error"])
+
+                response = self.fetch(page, year)
+                movies = response.json()
+                movies_counts[year] = 10 * (page - 1) + len(movies)
+
+            except (AuthenticationException, MovieFetcherException) as e:
                 print(f"{e} for year {year}")
                 movies_counts[year] = None
 
             except Exception as e:
                 print(f"Unexpected error while fetching year {year}: {e}")
                 movies_counts[year] = None
-
-
         return movies_counts
+
+    def fetch(self, page, year) -> Response:
+        # Authenticate every time for each request
+        bearer_token = self.authenticator.authenticate()
+
+        # Build the request URL
+        url = self.authenticator.base_url + constant.MOVIES_API.format(
+            year=year, page=page
+        )
+        headers = {"Authorization": f"Bearer {bearer_token}"}
+        response = requests.get(url, headers=headers)
+        return response
