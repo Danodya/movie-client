@@ -55,6 +55,7 @@ class Authenticator:
         if self.token and self.token_expiry > datetime.now():
             return self.token
 
+        # Get the token only if invalid
         url = self.base_url + constant.AUTH_API
         payload = {"username": self.username, "password": self.password}
         response = requests.post(
