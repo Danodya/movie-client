@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 import requests
 from client_app_cli.constants import constant
 from client_app_cli.exceptions.exceptions import AuthenticationException
@@ -19,6 +21,8 @@ class Authenticator:
         self.username = username
         self.password = password
         self.base_url = base_url
+        self.token = None
+        self.token_expiry = datetime.min
         self.__validate()
 
     def __validate(self):
@@ -42,11 +46,16 @@ class Authenticator:
         parsed = urlparse(url)
         return all([parsed.scheme, parsed.netloc])
 
-    def authenticate(self) -> str:
+    def authenticate(self) -> str | None:
         """
         Authenticates the user using the username and password provided at instantiation.
         :return: bearer token
         """
+        # check if the token is still valid
+        if self.token and self.token_expiry > datetime.now():
+            return self.token
+
+        # Get the token only if invalid
         url = self.base_url + constant.AUTH_API
         payload = {"username": self.username, "password": self.password}
         response = requests.post(
@@ -54,7 +63,10 @@ class Authenticator:
         )
 
         if response.status_code == 200:
-            bearer_token = response.json()["bearer"]
+            self.token = response.json()["bearer"]
+            self.token_expiry = datetime.now() + timedelta(
+                seconds=response.json()["timeout"]
+            )
         else:
             raise AuthenticationException(response.json()["error"])
-        return bearer_token
+        return self.token

@@ -71,3 +71,23 @@ def test_authenticate_failure(mock_post):
     """
     with pytest.raises(AuthenticationException, match=r".*invalid token*"):
         Authenticator(DEFAULT_USERNAME, DEFAULT_PASSWORD, BASE_URL).authenticate()
+
+
+@mock.patch("requests.post", side_effect=mocked_auth_success)
+def test_authenticate_returns_same_token_from_cache(mock_post):
+    responses = []
+    errors = []
+    auth = Authenticator(DEFAULT_USERNAME, DEFAULT_PASSWORD, BASE_URL)
+    func_call_times = 0
+
+    def auth_function():
+        try:
+            responses.append(auth.authenticate())
+        except AuthenticationException as e:
+            errors.append(e)
+
+    while func_call_times < 2:
+        auth_function()
+        func_call_times += 1
+    assert all(1234 == token for token in responses)
+    mock_post.assert_called_once()
