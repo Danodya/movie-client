@@ -9,6 +9,7 @@ from client_app_cli.constants.constant import (
     BASE_URL,
 )
 from client_app_cli.fetcher.movie_fetcher import MovieFetcher
+from client_app_cli.pretty_print.pretty_print import PrettyPrinter
 
 if __name__ == "__main__":
     print("Starting movie-client...")
@@ -19,7 +20,6 @@ if __name__ == "__main__":
         argument_parser.parse().search,
         argument_parser.parse().count_only,
     )
-    # years = argument_parser.parse().years
 
     username = os.environ.get("MOVIE_API_USERNAME", DEFAULT_USERNAME)
     password = os.environ.get("MOVIE_API_PASSWORD", DEFAULT_PASSWORD)
@@ -28,21 +28,7 @@ if __name__ == "__main__":
     auth = Authenticator(username, password, base_url)
     fetcher = MovieFetcher(auth)
 
-    response = fetcher.fetch_movies(args.years)
+    response = fetcher.fetch_movies(args)
+    print(args.count_only)
 
-    if response:
-        print("\n========================================\n")
-        print("Results for fetched movies:\n")
-        pretty_response = "\n".join(
-            [
-                (
-                    f"Failed to fetch movies for year {key}."
-                    if response[key] is None
-                    else f"Year {key} has {response[key]} movies."
-                )
-                for key in response
-            ]
-        )
-        print(pretty_response)
-    else:
-        print("No response received.")
+    PrettyPrinter.pretty_print(response, args)

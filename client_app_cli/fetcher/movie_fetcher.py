@@ -2,6 +2,7 @@ from typing import List, Any
 import requests
 from requests import Response
 
+from client_app_cli.arguments.arguments import Arguments
 from client_app_cli.auth.authenticator import Authenticator
 from client_app_cli.exceptions.exceptions import (
     AuthenticationException,
@@ -59,20 +60,35 @@ class MovieFetcher:
 
         return page
 
-    def fetch_movies(self, years: List[int]) -> dict[Any, Any]:
+    def fetch_movies(self, args: Arguments) -> dict[Any, Any]:
         """
         Fetch movie data from the API for the specified years, handling authentication and pagination
         :return: A dictionary mapping each year to the count of movies fetched.
         """
         movies_counts: dict[Any, Any] = {}
-        years = self.__process_years(years)
+        years = self.__process_years(args.years)
+        search_term = args.search_term
+        count_only = args.count_only
 
         for year in sorted(years):
+            filtered_movies: Any = []
             try:
                 page = self.find_lowest_failing_page_for_year(year)
-                response = self.fetch(page - 1, year)
-                movies = response.json()
-                movies_counts[year] = 10 * (page - 2) + len(movies)
+
+                if not search_term:
+                    response = self.fetch(page - 1, year)
+                    movies = response.json()
+                    movies_counts[year] = [10 * (page - 2) + len(movies), None]
+                if search_term:
+                    for p in range(1, page):
+                        response = self.fetch(p, year)
+                        movies = response.json()
+                        filtered_movies.extend(
+                            movie
+                            for movie in movies
+                            if search_term.lower() in movie.lower()
+                        )
+                    movies_counts[year] = [len(filtered_movies), filtered_movies]
 
             except (AuthenticationException, MovieFetcherException) as e:
                 print(f"{e} for year {year}")

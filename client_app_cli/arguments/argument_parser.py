@@ -40,7 +40,7 @@ class ArgumentParser:
         self.parser.add_argument(
             "-c",
             "--count-only",
-            required=False,
+            action="store_true",
             help="Display only the movie count for each year",
         )
 
