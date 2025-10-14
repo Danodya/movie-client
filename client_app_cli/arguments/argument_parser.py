@@ -28,8 +28,22 @@ class ArgumentParser:
             required=True,
             nargs="+",
             type=int,
-            help="The years to fetch movies for (e.g., y 1940 1950)",
+            help="The years to fetch movies for (e.g., -y 1940 1950)",
         )
+        self.parser.add_argument(
+            "-s",
+            "--search",
+            required=True,
+            type=str,
+            help="The search term to filter movies for (e.g., -s star)",
+        )
+        self.parser.add_argument(
+            "-c",
+            "--count-only",
+            required=False,
+            help="Display only the movie count for each year",
+        )
+
 
     def parse(self) -> argparse.Namespace:
         """

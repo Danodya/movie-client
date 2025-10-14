@@ -1,6 +1,7 @@
 import os
 
 from client_app_cli.arguments.argument_parser import ArgumentParser
+from client_app_cli.arguments.arguments import Arguments
 from client_app_cli.auth.authenticator import Authenticator
 from client_app_cli.constants.constant import (
     DEFAULT_USERNAME,
@@ -13,7 +14,8 @@ if __name__ == "__main__":
     print("Starting movie-client...")
 
     argument_parser = ArgumentParser()
-    years = argument_parser.parse().years
+    args = Arguments(argument_parser.parse().years, argument_parser.parse().search, argument_parser.parse().count_only)
+    # years = argument_parser.parse().years
 
     username = os.environ.get("MOVIE_API_USERNAME", DEFAULT_USERNAME)
     password = os.environ.get("MOVIE_API_PASSWORD", DEFAULT_PASSWORD)
@@ -22,7 +24,7 @@ if __name__ == "__main__":
     auth = Authenticator(username, password, base_url)
     fetcher = MovieFetcher(auth)
 
-    response = fetcher.fetch_movies(years)
+    response = fetcher.fetch_movies(args.years)
 
     if response:
         print("\n========================================\n")
