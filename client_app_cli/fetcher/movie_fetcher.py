@@ -78,14 +78,15 @@ class MovieFetcher:
                     response = self.fetch(page - 1, year)
                     movies = response.json()
                     movies_counts[year] = [10 * (page - 2) + len(movies), None]
-                if search_term:
+                else:
+                    search_term_lower = search_term.lower()
                     for p in range(1, page):
                         response = self.fetch(p, year)
                         movies = response.json()
                         filtered_movies.extend(
                             movie
                             for movie in movies
-                            if search_term.lower() in movie.lower()
+                            if search_term_lower in movie.lower()
                         )
                     movies_counts[year] = [len(filtered_movies), filtered_movies]
 
