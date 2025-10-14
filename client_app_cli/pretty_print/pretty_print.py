@@ -1,7 +1,5 @@
 from typing import Any
 
-from requests import Response
-
 from client_app_cli.arguments.arguments import Arguments
 
 
