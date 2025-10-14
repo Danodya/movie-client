@@ -68,7 +68,6 @@ class MovieFetcher:
         movies_counts: dict[Any, Any] = {}
         years = self.__process_years(args.years)
         search_term = args.search_term
-        count_only = args.count_only
 
         for year in sorted(years):
             filtered_movies: Any = []
