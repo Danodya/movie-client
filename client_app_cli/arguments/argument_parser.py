@@ -44,7 +44,6 @@ class ArgumentParser:
             help="Display only the movie count for each year",
         )
 
-
     def parse(self) -> argparse.Namespace:
         """
         Parse and return the CLI arguments.

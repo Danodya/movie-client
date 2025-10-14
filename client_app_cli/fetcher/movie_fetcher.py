@@ -59,7 +59,6 @@ class MovieFetcher:
 
         return page
 
-
     def fetch_movies(self, years: List[int]) -> dict[Any, Any]:
         """
         Fetch movie data from the API for the specified years, handling authentication and pagination

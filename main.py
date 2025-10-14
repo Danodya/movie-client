@@ -14,7 +14,11 @@ if __name__ == "__main__":
     print("Starting movie-client...")
 
     argument_parser = ArgumentParser()
-    args = Arguments(argument_parser.parse().years, argument_parser.parse().search, argument_parser.parse().count_only)
+    args = Arguments(
+        argument_parser.parse().years,
+        argument_parser.parse().search,
+        argument_parser.parse().count_only,
+    )
     # years = argument_parser.parse().years
 
     username = os.environ.get("MOVIE_API_USERNAME", DEFAULT_USERNAME)

@@ -1,4 +1,3 @@
-
 class Arguments:
     def __init__(self, years, search, count_only):
         self.years = years
