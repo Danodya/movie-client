@@ -82,7 +82,9 @@ class MovieFetcher:
                     movies_counts[year] = [10 * (page - 2) + len(movies), None]
                 else:
                     search_term_lower = search_term.lower()
-                    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+                    with concurrent.futures.ThreadPoolExecutor(
+                        max_workers=5
+                    ) as executor:
                         futures = {
                             executor.submit(
                                 self.fetch_and_filter, p, year, search_term_lower
@@ -135,7 +137,5 @@ class MovieFetcher:
         """
         response = self.fetch(page, year)
         movies = response.json()
-        filtered_movies = [
-            movie for movie in movies if search_term in movie.lower()
-        ]
+        filtered_movies = [movie for movie in movies if search_term in movie.lower()]
         return filtered_movies
