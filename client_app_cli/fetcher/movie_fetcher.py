@@ -1,3 +1,4 @@
+import concurrent.futures
 from typing import List, Any
 import requests
 from requests import Response
@@ -24,7 +25,8 @@ class MovieFetcher:
         """
         self.authenticator = authenticator
 
-    def __process_years(self, years: List[int]):
+    @staticmethod
+    def __process_years(years: List[int]):
         """
         convert the list of years into a set to get unique years
         """
@@ -80,14 +82,20 @@ class MovieFetcher:
                     movies_counts[year] = [10 * (page - 2) + len(movies), None]
                 else:
                     search_term_lower = search_term.lower()
-                    for p in range(1, page):
-                        response = self.fetch(p, year)
-                        movies = response.json()
-                        filtered_movies.extend(
-                            movie
-                            for movie in movies
-                            if search_term_lower in movie.lower()
-                        )
+                    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+                        futures = {
+                            executor.submit(
+                                self.fetch_and_filter, p, year, search_term_lower
+                            )
+                            for p in range(1, page)
+                        }
+                        for future in concurrent.futures.as_completed(futures):
+                            try:
+                                result = future.result()
+                                filtered_movies.extend(result)
+                            except Exception as e:
+                                print(f"Error occurred while fetching: {e}")
+
                     movies_counts[year] = [len(filtered_movies), filtered_movies]
 
             except (AuthenticationException, MovieFetcherException) as e:
@@ -102,7 +110,7 @@ class MovieFetcher:
     def fetch(self, page: int, year: int) -> Response:
         """
         Fetch movies for given year and page
-        :param page: page number to fetch
+        :param page: number to fetch
         :param year: year to fetch movies
         :return: Response object for the fetched movies
         """
@@ -116,3 +124,18 @@ class MovieFetcher:
         headers = {"Authorization": f"Bearer {bearer_token}"}
         response = requests.get(url, headers=headers)
         return response
+
+    def fetch_and_filter(self, page: int, year: int, search_term: str) -> List[str]:
+        """
+        Fetch movies for given year and page and filter them based on the search term
+        :param page: page number to fetch
+        :param year: year to fetch movies
+        :param search_term: term to filter movies(case-insensitive)
+        :return: List of filtered movies
+        """
+        response = self.fetch(page, year)
+        movies = response.json()
+        filtered_movies = [
+            movie for movie in movies if search_term in movie.lower()
+        ]
+        return filtered_movies
