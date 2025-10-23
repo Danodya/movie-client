@@ -128,7 +128,7 @@ Where:
 - `-y` or `--years`: Specify one or more years to fetch movies for
 - `-s` or `--search-term`: Specify a search term to filter movie titles ("" means no filtering)
 - `-c` or `--count-only`: (Optional) If provided, only the count of movies will be displayed instead of detailed information
-```
+
 ## **Example Output**
 ```
 A progress bar will be displayed while fetching movies for each year.
@@ -148,6 +148,7 @@ Docker image only contains the necessary files to run the `movie-server` and `mo
 To run tests, you need to set up a Python virtual environment as described in the "Build from source" section above.
 
 Run the tests using `pytest`:
+
 ```bash
 pytest -vx
 ``` 
