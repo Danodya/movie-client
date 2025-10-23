@@ -6,4 +6,11 @@ echo "Starting movie server..."
 
 sleep 5
 
-python movie-client/main.py -y "$@"
+
+# Ensure both arguments (-y and -s) are provided
+if [ -z "$1" ] || [ -z "$2" ]; then
+  echo "Usage: entrypoint.sh -y <year(s)> -s <search_term> [--count-only]"
+  exit 1
+fi
+
+python movie-client/main.py "$@"

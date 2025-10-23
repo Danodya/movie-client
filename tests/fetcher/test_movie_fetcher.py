@@ -97,7 +97,6 @@ def test_fetch_success_with_search_term(mock_post, mock_get, fetcher, years):
     """
     args = Arguments(years, "test", False)
     fetch_response = fetcher.fetch_movies(args)
-    print(fetch_response)
     assert isinstance(fetch_response, dict)
     assert fetch_response[1940][0] == 6
 
@@ -114,7 +113,6 @@ def test_fetch_success_with_count_only(mock_post, mock_get, fetcher, years):
     """
     args = Arguments(years, "test", True)
     fetch_response = fetcher.fetch_movies(args)
-    print(fetch_response)
     assert isinstance(fetch_response, dict)
     assert fetch_response[1940][0] == 6
 
