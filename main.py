@@ -29,6 +29,4 @@ if __name__ == "__main__":
     fetcher = MovieFetcher(auth)
 
     response = fetcher.fetch_movies(args)
-    print(args.count_only)
-
     PrettyPrinter.pretty_print(response, args)

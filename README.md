@@ -29,7 +29,8 @@ movie-client/
 │   ├── constants/              # Application constants (default configs, URLs, etc.)
 │   ├── exceptions/             # Custom exception classes
 │   └── fetcher/                # Core logic for fetching movie data
-│       └── movie_fetcher.py    # Fetch movies by year and handle pagination
+│   │    └── movie_fetcher.py   # Fetch movies by year and handle pagination
+│   └── pretty_printer/         # Printing results in a formatted way
 ├── tests/                      # Unit and integration tests
 ├── Dockerfile                  # Docker image definition for the project
 ├── entrypoint.sh               # Entrypoint script to run the app inside Docker
@@ -56,9 +57,9 @@ Both the `movie-server` and the `movie-client` are packaged inside the same Dock
 and both will start automatically when the container runs with the entrypoint script with the provided arguments.
 
 To run the application using Docker, use the following command:
-Provide only the year or years separated by spaces as arguments (e.g., 1940 1950):
+Provide the year or years separated by spaces as arguments, search term and count only optionally (e.g.,-y 1940 1950 -s "Star" -c):
 ```bash
-docker run -it ghcr.io/danodya/jr103155:1.0.0 1940 1950
+docker run -it ghcr.io/danodya/jr103155:1.0.0 -y 1940 1950 -s "star"
 ```
 If you want to provide environment variables for the API URL, username, and password, you can do so using the `-e` flag:
 ```bash
@@ -70,8 +71,8 @@ docker run -it -e MOVIE_API_BASE_URL="http://localhost:8080/" -e MOVIE_API_USERN
 > 
 > For example, to run the client application for the years 1940 and 1950 by logging into the container:
 > ```bash
-> docker run -it ghcr.io/danodya/jr103155:1.0.0     # Logs into the container because the entrypoint script ends with bash
-> python movie-client/main.py -y 1940 1950          # Runs the client application for 1940 and 1950
+> docker run -it ghcr.io/danodya/jr103155:1.0.0        # Logs into the container because the entrypoint script ends with bash
+> python movie-client/main.py -y 1940 1950 -s "" -c    # Runs the client application for 1940 and 1950 for empty search term and count only
 > ```
 
 ## **Build from source**
@@ -84,9 +85,9 @@ git clone https://github.com/Danodya/movie-client.git && cd movie-client
 ```bash
 docker build -t movie-client .
 ```
-3. Run the container with the required environment variables(if needed) and years as arguments:
+3. Run the container with the required environment variables(if needed) and years, search-term and count-only(optional) as arguments:
 ```bash
-docker run -it movie-client 1940 1950
+docker run -it movie-client -y 1940 1950 -s "star" -c
 ```
 
 ### Using Python virtual environment ###
@@ -121,8 +122,13 @@ MOVIE_API_BASE_URL="http://localhost:8080/" MOVIE_API_USERNAME="username" MOVIE_
 
 To fetch movies for specific years, we need the movie server running and accessible. Run movie-server first, then execute:
 ```bash
-python main.py -y 1940 1950
+python main.py -y 1940 1950 -s "star" -c
 ```
+Where:
+- `-y` or `--years`: Specify one or more years to fetch movies for
+- `-s` or `--search-term`: Specify a search term to filter movie titles ("" means no filtering)
+- `-c` or `--count-only`: (Optional) If provided, only the count of movies will be displayed instead of detailed information
+
 ## **Example Output**
 ```
 A progress bar will be displayed while fetching movies for each year.
@@ -133,8 +139,8 @@ Fetching movies by year:
 
 Results for fetched movies:
 
-Year 1940 has 1686 movies.
-Year 1950 has 1913 movies.
+Year 1940 has 6 movies: ['The Stars Look Down', 'Bastard', 'The Light of Western Stars', 'Lone Star Raiders', 'Star Dust', 'Staryy naezdnik']
+Year 1950 has 3 movies: ['The Falling Star', 'Stars in My Crown', 'Under Mexicali Stars']
 ```
 
 ## **Testing**
@@ -142,27 +148,31 @@ Docker image only contains the necessary files to run the `movie-server` and `mo
 To run tests, you need to set up a Python virtual environment as described in the "Build from source" section above.
 
 Run the tests using `pytest`:
+
 ```bash
 pytest -vx
 ``` 
-Test coverage for the overall project is approximately 90%. Coverage report is as follows:
+Test coverage for the overall project is approximately 83%. Coverage report is as follows:
 ```
 
 Name                                          Stmts   Miss  Cover
 -----------------------------------------------------------------
 client_app_cli/__init__.py                        0      0   100%
 client_app_cli/arguments/__init__.py              0      0   100%
-client_app_cli/arguments/argument_parser.py       9      9     0%
+client_app_cli/arguments/argument_parser.py      11     11     0%
+client_app_cli/arguments/arguments.py             5      0   100%
 client_app_cli/auth/__init__.py                   0      0   100%
-client_app_cli/auth/authenticator.py             28      0   100%
+client_app_cli/auth/authenticator.py             34      0   100%
 client_app_cli/constants/__init__.py              0      0   100%
 client_app_cli/constants/constant.py              5      0   100%
 client_app_cli/exceptions/__init__.py             0      0   100%
-client_app_cli/exceptions/exceptions.py           2      0   100%
+client_app_cli/exceptions/exceptions.py           4      0   100%
 client_app_cli/fetcher/__init__.py                0      0   100%
-client_app_cli/fetcher/movie_fetcher.py          42      0   100%
+client_app_cli/fetcher/movie_fetcher.py          75      2    97%
+client_app_cli/pretty_print/__init__.py           0      0   100%
+client_app_cli/pretty_print/pretty_print.py      12     12     0%
 -----------------------------------------------------------------
-TOTAL                                            86      9    90%
+TOTAL                                           146     25    83%
 
 ```
 
@@ -181,5 +191,5 @@ Example commands used in the CI:
 ## **Versioning**
 The current version of the application is stored in the `.version` file. Update this file to change the version number.
 ```
-1.0.0
+2.0.0
 ```
