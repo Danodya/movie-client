@@ -152,7 +152,7 @@ Run the tests using `pytest`:
 ```bash
 pytest -vx
 ``` 
-Test coverage for the overall project is approximately 90%. Coverage report is as follows:
+Test coverage for the overall project is approximately 83%. Coverage report is as follows:
 ```
 
 Name                                          Stmts   Miss  Cover
